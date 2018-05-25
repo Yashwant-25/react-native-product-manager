@@ -4,7 +4,7 @@ import { Provider, connect } from "react-redux";
 import AppWithNavigationState, { middleware } from "./containers/AppNavigator";
 import rootReducer from "./reducers";
 import createSagaMiddleware from "redux-saga";
-import {productWatchers} from "./sagas/product";
+import rootWatchers from "./sagas/index";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -23,7 +23,7 @@ const store = createStore(
   },
   applyMiddleware(middleware, sagaMiddleware)
 );
-sagaMiddleware.run(productWatchers);
+sagaMiddleware.run(rootWatchers);
 
 export default class Root extends React.Component {
   render() {

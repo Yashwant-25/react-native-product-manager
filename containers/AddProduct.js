@@ -1,10 +1,23 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Button, TextInput, Picker,Alert,Text,Platform } from 'react-native';
+import React, { Component } from "react";
+import {
+  View,
+  StyleSheet,
+  Button,
+  TextInput,
+  Picker,
+  Alert,
+  Text,
+  Platform,
+  ActivityIndicator
+} from "react-native";
+import { addProduct } from "../actionCreators/AddProduct";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 
 let URI = "http://172.16.105.165:4000";
 
-export default class AddProduct extends Component {
-  static navigationOptions= {
+class AddProduct extends Component {
+  static navigationOptions = {
     title: "Add",
     headerStyle: {
       backgroundColor: "#00ff80"
@@ -13,67 +26,75 @@ export default class AddProduct extends Component {
     headerTitleStyle: {
       fontWeight: "bold",
       textAlign: "center"
-    },
-  }
+    }
+  };
   constructor(props) {
     super(props);
     this.state = {
-      title: '',
-      titleError:null,
-      category: 'Mobiles',
-      additionalInfo: '',
-      categories: ['Mobiles', 'Laptops', 'Desktops', 'Others'],
-      price:''
-    }
+      title: "",
+      titleError: null,
+      category: "Mobiles",
+      additionalInfo: "",
+      categories: ["Mobiles", "Laptops", "Desktops", "Others"],
+      price: ""
+    };
   }
 
   handleSubmit = () => {
-    let {
+    let { title, category, additionalInfo, price } = this.state;
+    if (!title) {
+      this.setState({ titleError: "Title is required" });
+      return;
+    }
+    const product = {
       title,
       category,
       additionalInfo,
       price
-    } = this.state;
-    if(!title){
-      this.setState({titleError:'Title is required'})
-      return;
-    }
-    fetch(`${URI}/products`, {
-      body: JSON.stringify({
-        title,
-        category,
-        additionalInfo,
-        price
-      }),
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json'
-      },
-    }).then(p => {Alert.alert('Success','Product Saved Successfully')})
-  }
+    };
+
+    this.props.addProduct(product);
+
+    // fetch(`${URI}/products`, {
+    //   body: JSON.stringify({
+    //     title,
+    //     category,
+    //     additionalInfo,
+    //     price
+    //   }),
+    //   method: 'POST',
+    //   headers: {
+    //     'content-type': 'application/json'
+    //   },
+    // }).then(p => {Alert.alert('Success','Product Saved Successfully')})
+  };
 
   renderCategories = () => {
-    return this.state.categories.map(c => <Picker.Item key={c} label={c} value={c} />)
-  }
+    return this.state.categories.map(c => (
+      <Picker.Item key={c} label={c} value={c} />
+    ));
+  };
   render() {
     return (
       <View style={styles.container}>
         <TextInput
           style={styles.control}
-          onChangeText={(title) => {
-            this.setState({ title,titleError:null })
-            if(title.length==0){
-              this.setState({ titleError:'Title is required' })
+          onChangeText={title => {
+            this.setState({ title, titleError: null });
+            if (title.length == 0) {
+              this.setState({ titleError: "Title is required" });
             }
           }}
           value={this.state.title}
           placeholder="Product Name"
           placeholderTextColor="grey"
         />
-        {this.state.titleError && <Text style={{color:'red'}}>Title is required</Text>}
+        {this.state.titleError && (
+          <Text style={{ color: "red" }}>Title is required</Text>
+        )}
         <TextInput
           numberOfLines={5}
-          onChangeText={(additionalInfo) => this.setState({ additionalInfo })}
+          onChangeText={additionalInfo => this.setState({ additionalInfo })}
           multiline={true}
           value={this.state.additionalInfo}
           placeholder="Additional Info"
@@ -82,7 +103,7 @@ export default class AddProduct extends Component {
         />
         <TextInput
           style={styles.control}
-          onChangeText={(price) => this.setState({ price })}
+          onChangeText={price => this.setState({ price })}
           value={this.state.price}
           placeholder="Product Price"
           placeholderTextColor="grey"
@@ -90,13 +111,16 @@ export default class AddProduct extends Component {
         />
         <Picker
           selectedValue={this.state.language}
-          onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}>
+          onValueChange={(itemValue, itemIndex) =>
+            this.setState({ language: itemValue })
+          }
+        >
           {this.renderCategories()}
         </Picker>
-        <Button
-          title="Add"
-          onPress={this.handleSubmit}
-        />
+        <Button title="Add" onPress={this.handleSubmit} />
+        {this.props.isLoading ? (
+          <ActivityIndicator size="large" color="#00ff80" />
+        ) : null}
       </View>
     );
   }
@@ -107,26 +131,40 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     alignItems: "stretch",
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff"
   },
-  control:{
+  control: {
     ...Platform.select({
-      android:{
-        height:40
+      android: {
+        height: 40
       },
-      ios:{
-        borderBottomWidth:StyleSheet.hairlineWidth,
-        borderBottomColor:'grey',
-        marginTop:20,
-        marginBottom:20
+      ios: {
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: "grey",
+        marginTop: 20,
+        marginBottom: 20
       }
     })
   },
-  additionalInfo:{
+  additionalInfo: {
     ...Platform.select({
-      ios:{
-        height:80
+      ios: {
+        height: 80
       }
     })
   }
 });
+
+function mapStateToProps(state) {
+  return {
+    isLoading: state.AddState.isLoading
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    addProduct: bindActionCreators(addProduct, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddProduct);

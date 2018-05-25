@@ -11,10 +11,10 @@ export function getStores() {
     }
 }
 
-export function getStoresSuccess(products) {
+export function getStoresSuccess(stores) {
     return {
         type: GET_STORES_SUCCESS,
-        products
+        stores
     }
 }
 

@@ -7,6 +7,8 @@ import {
     createNavigationReducer
 } from "react-navigation-redux-helpers";
 import {AppNavigator} from "../containers/AppNavigator";
+import AddProduct from "./AddProduct";
+import ProductDetails from "./ProductDetails";
 
 
 const navReducer = createNavigationReducer(AppNavigator);
@@ -14,7 +16,9 @@ const navReducer = createNavigationReducer(AppNavigator);
 const rootReducer = combineReducers({
     productState: productReducer,
     storeState: storeReducer,
-    navState: navReducer
+    navState: navReducer,
+    AddState: AddProduct,
+    productDetailsState:  ProductDetails
 })
 
 export default rootReducer;

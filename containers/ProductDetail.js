@@ -1,5 +1,9 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
+import { getProductDetails } from "../actionCreators/GetProductDetail";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+
 
 let URI = "http://172.16.105.165:4000";
 
@@ -68,4 +72,19 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ProductDetail;
+function mapStateToProps(state) {
+  return {
+    productDetails: state.productDetailsState.productDetails,
+    isLoading: state.productDetailsState.isLoading,
+    
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    productDetails: bindActionCreators(getProductDetails, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductDetail);
+
