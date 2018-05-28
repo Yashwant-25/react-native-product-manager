@@ -9,6 +9,7 @@ import {
 import {AppNavigator} from "../containers/AppNavigator";
 import AddProduct from "./AddProduct";
 import ProductDetails from "./ProductDetails";
+import SearchItems from "./SearchItems";
 
 
 const navReducer = createNavigationReducer(AppNavigator);
@@ -18,7 +19,8 @@ const rootReducer = combineReducers({
     storeState: storeReducer,
     navState: navReducer,
     AddState: AddProduct,
-    productDetailsState:  ProductDetails
+    productDetailsState:  ProductDetails,
+    searchState: SearchItems
 })
 
 export default rootReducer;

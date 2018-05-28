@@ -16,9 +16,10 @@ import {
 // export const GET_PRODUCT_SUCCESS = 'GET_PRODUCT_SUCCESS'
 // export const GET_PRODUCT_FAILURE = 'GET_PRODUCT_FAILURE'
 
-export function getSearchProducts(page, limit) {
+export function getSearchProducts(searchText, page, limit) {
     return {
         type: GET_PRODUCTS_FROM_SEARCH,
+        searchText,
         page,
         limit
     }
@@ -26,14 +27,14 @@ export function getSearchProducts(page, limit) {
 
 export function getSearchProductsSuccess(products) {
     return {
-        type: GET_PRODUCTS_SUCCESS_FROM_SEARCH,
+        type: GET_PRODUCTS_FROM_SEARCH_SUCCESS,
         products
     }
 }
 
 export function getSearchProductsFailure(error) {
     return {
-        type: GET_PRODUCTS_FAILURE_FROM_SEARCH,
+        type: GET_PRODUCTS_FROM_SEARCH_FAILURE,
         error
     }
 }

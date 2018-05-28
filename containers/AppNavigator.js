@@ -9,8 +9,9 @@ import React from "react";
 import ProductDetail from "./ProductDetail";
 import AddProduct from "./AddProduct";
 import StoreMap from "./StoreMap";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons"
+import { Ionicons, MaterialIcons, FontAwesome } from "@expo/vector-icons"
 import ProductListWithFlatList from "./ProductListWithFlatList";
+import SearchItem from "./SearchItem";
 
 const ListStack = createStackNavigator(
   {
@@ -59,11 +60,37 @@ const AddStack = createStackNavigator(
   }
 );
 
+const SearchStack = createStackNavigator(
+  {
+    SearchItem: {
+      screen: SearchItem
+    },
+    SearchProductDetail: {
+      screen: ProductDetail
+    }
+  },
+  {
+    initialRouteName: "SearchItem",
+    navigationOptions: {
+      title: "Product Manager",
+      headerStyle: {
+        backgroundColor: "#00ff80"
+      },
+      headerTintColor: "#fff",
+      headerTitleStyle: {
+        fontWeight: "bold",
+        textAlign: "center"
+      }
+    }
+  }
+);
+
 export const AppNavigator = createBottomTabNavigator(
   {
     List: ListStack,
     Add: AddStack,
-    Stores: StoreMap
+    Stores: StoreMap,
+    Search: SearchStack,
   },
   {
     navigationOptions: ({ navigation }) => ({
@@ -82,6 +109,8 @@ export const AppNavigator = createBottomTabNavigator(
               color={tintColor}
             />
           );
+        }else if (routeName === "Search") {
+          iconName = `ios-search${focused ? "" : "-outline"}`;
         }
 
         // You can return any component that you like here! We usually use an
